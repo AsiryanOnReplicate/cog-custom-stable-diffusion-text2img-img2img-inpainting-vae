@@ -1,4 +1,4 @@
-# Stable Diffusion
+# Stable Diffusion with VAE
 
 This is an implementation of a Cog model. [Cog packages machine learning models as standard containers.](https://github.com/replicate/cog)
 
