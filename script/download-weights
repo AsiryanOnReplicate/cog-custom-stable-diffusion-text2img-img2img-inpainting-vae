@@ -4,17 +4,18 @@
 import os
 import sys
 import torch
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, AutoencoderKL
+from diffusers import StableDiffusionPipeline, StableDiffusionInpaintPipeline, AutoencoderKL
 
 # append project directory to path so predict.py can be imported
 sys.path.append('.')
-from predict import MODEL_CACHE, MODEL_INPAINTING_CACHE, VAE_CACHE
+from predict import MODEL_CACHE, VAE_CACHE, MODEL_INPAINTING_CACHE
+
 
 # vae model
 if not os.path.exists(VAE_CACHE):
     os.makedirs(VAE_CACHE, exist_ok=True)
 
-vae_url = "https://huggingface.co/asiryan/juggernaut/blob/main/TRCVAE.safetensors"
+vae_url = "https://huggingface.co/stabilityai/sd-vae-ft-mse-original/blob/main/vae-ft-mse-840000-ema-pruned.safetensors"
 vae = AutoencoderKL.from_single_file(
     vae_url,
     cache_dir=VAE_CACHE
@@ -23,21 +24,21 @@ vae = AutoencoderKL.from_single_file(
 # Text2Img and Img2Img models
 if not os.path.exists(MODEL_CACHE):
     os.makedirs(MODEL_CACHE)
-    
-model_url = "https://huggingface.co/asiryan/juggernaut/blob/main/juggernaut_aftermath.safetensors"
+
+model_url = "https://huggingface.co/asiryan/dark-sushi/blob/main/darkSushiMixMix_225D.safetensors"
 
 StableDiffusionPipeline.from_single_file(
     model_url,
     torch_dtype=torch.float16
 ).save_pretrained(MODEL_CACHE)
 
+# Inpainting model
 if not os.path.exists(MODEL_INPAINTING_CACHE):
     os.makedirs(MODEL_INPAINTING_CACHE)
 
-# Inpainting model
-model_inpainting_url = "https://huggingface.co/asiryan/juggernaut/blob/main/juggernaut_aftermath-inpainting.safetensors"
+model_inpainting_url = "https://huggingface.co/asiryan/dark-sushi/blob/main/darkSushiMixMix_225D_inpainting.safetensors"
 
-StableDiffusionImg2ImgPipeline.from_single_file(
+StableDiffusionInpaintPipeline.from_single_file(
     model_inpainting_url,
     torch_dtype=torch.float16
 ).save_pretrained(MODEL_INPAINTING_CACHE)
